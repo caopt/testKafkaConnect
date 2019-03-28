@@ -32,8 +32,17 @@ public class KafkaProducerT extends Thread{
 
     @Override
     public void run () {
-        for (int i = 0; i < 100; i++)
-            producer.send(new ProducerRecord<String, String>("cpt", Integer.toString(i), Integer.toString(i)));
+        for (int i = 0; i < 100; i++) {
+            try {
+                sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            producer.send(new ProducerRecord<String, String>("test", Integer.toString(i), Integer.toString(i)));
+            if (i == 99) {
+                producer.send(new ProducerRecord<String, String>("test", "exit", "exit"));
+            }
+        }
         logger.info("send over");
         producer.close();
     }
